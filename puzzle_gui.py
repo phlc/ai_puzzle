@@ -12,7 +12,7 @@ class _Button_:
         self.value = value
         self.lin = lin
         self.col = col
-        self.number = Button(puzzle_frame, text = " " if self.value==16 else str(self.value), font=('arial', 80), bd=3) 
+        self.number = Button(puzzle_frame, text = " " if self.value==9 else str(self.value), font=('arial', 80), bd=3) 
         self.number.place(x = self.col*150+40, y = self.lin*130+20, width=150, height=130)
 
 
@@ -97,12 +97,17 @@ def solve():
     initial_time = time.time()
     states_list = ai.solve(algorithm_control.get())
     time_spent = time.time() - initial_time
-    moves = 1
-    for state in states_list:
+    moves = 0
+    last = len(states_list)-1
+    print(last)
+    last = 1 if algorithm_control.get() == 2 else last
+    while(last!=0):
+        root.update()
         time.sleep(0.5)
-        show_numbers(state.board)
+        show_numbers(states_list[last].board)
         update_moves_time(moves, "{:.4f}".format(time_spent))
         moves += 1
+        last -= 1
 
 Button(reset_new_frame, text = "   Reset   \nGame", font=('arial', 30),pady=10, height=2, command=reset_game).pack(side="left")
 Button(reset_new_frame, text = "New Game", font=('arial', 30),pady=10, height=2, command=new_game).pack(side="left")
