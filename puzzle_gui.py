@@ -100,8 +100,8 @@ def solve():
     moves = 0
     last = len(states_list)-1
     print(last)
-    last = 1 if algorithm_control.get() == 2 else last
-    while(last!=0):
+    last = 0 if algorithm_control.get() == 2 else last
+    while(last>=0):
         root.update()
         time.sleep(0.5)
         show_numbers(states_list[last].board)

@@ -31,11 +31,14 @@ def _shuffle_():
 
 # state = board + parent
 class _state_:
-    def __init__(self, board, parent, index, empty_pos):
+    def __init__(self, board, parent, index, empty_pos, tree_level = 0, heuristic=0):
         self.board = board
         self.parent = parent
         self.index = index
         self.empty_pos = empty_pos
+        self.tree_level = tree_level
+        self.heuristic = heuristic
+        
 
 
 # Global Variables
@@ -71,12 +74,109 @@ def copy_board(a):
         new_board.append(new_line)
     return new_board
 
+def heuristic_manhattan(level, board):
+    all_distances = level
+    for i in range(3):
+        for j in range(3):
+            if(board[i][j] == 1):
+                all_distances += (abs(i-0)+abs(j-0))
+            elif(board[i][j] == 2):
+                all_distances += (abs(i-0)+abs(j-1))
+            elif(board[i][j] == 3):
+                all_distances += (abs(i-0)+abs(j-2))
+            elif(board[i][j] == 4):
+                all_distances += (abs(i-1)+abs(j-0))
+            elif(board[i][j] == 5):
+                all_distances += (abs(i-1)+abs(j-1))
+            elif(board[i][j] == 6):
+                all_distances += (abs(i-1)+abs(j-2))
+            elif(board[i][j] == 7):
+                all_distances += (abs(i-2)+abs(j-0))
+            elif(board[i][j] == 8):
+                all_distances += (abs(i-2)+abs(j-1))
+    return all_distances
+
+def insert_priority(list, state):
+    insert_pos = 0
+    while(insert_pos < len(list) and list[insert_pos].heuristic < state.heuristic):
+        insert_pos += 1
+    list.insert(insert_pos, state)
+
 def _a_star_():
-    pass
+    global _visited_list_, _solution_pos_, _solved_, _initial_state_
+    
+    priority_queue = []
+    priority_queue.append(_initial_state_)
+
+    while(not _solved_ and len(priority_queue)>0):
+        state = priority_queue.pop(0)
+        board = state.board
+        print(len(_visited_list_))
+        print(board)
+        index = state.index
+        parent_level = state.tree_level
+        empty_lin, empty_col = state.empty_pos
+
+        if(not _solved_ and 0 <= empty_lin-1):
+            new_board = copy_board(board)
+            new_board[empty_lin][empty_col] = new_board[empty_lin-1][empty_col]
+            new_board[empty_lin-1][empty_col] = 9
+            if(not in_visited(new_board)):
+                new_index = len(_visited_list_)
+                new_state = _state_(new_board, index, new_index, (empty_lin-1, empty_col), 
+                                    parent_level+1, heuristic_manhattan(parent_level+1, new_board))
+                _visited_list_.append(new_state)
+                insert_priority(priority_queue, new_state)
+                if(is_solution(new_board)):
+                    _solution_pos_ = new_index
+                    _solved_ = True
+        
+        if(not _solved_ and 0<= empty_col-1):
+            new_board = copy_board(board)
+            new_board[empty_lin][empty_col] = new_board[empty_lin][empty_col-1]
+            new_board[empty_lin][empty_col-1] = 9
+            if(not in_visited(new_board)):
+                new_index = len(_visited_list_)
+                new_state = _state_(new_board, index, new_index, (empty_lin, empty_col-1), 
+                                    parent_level+1, heuristic_manhattan(parent_level+1, new_board))
+                _visited_list_.append(new_state)
+                insert_priority(priority_queue, new_state)
+                if(is_solution(new_board)):
+                    _solution_pos_ = new_index
+                    _solved_ = True
+        
+        if(not _solved_ and empty_col+1 < 3):
+            new_board = copy_board(board)
+            new_board[empty_lin][empty_col] = new_board[empty_lin][empty_col+1]
+            new_board[empty_lin][empty_col+1] = 9
+            if(not in_visited(new_board)):
+                new_index = len(_visited_list_)
+                new_state = _state_(new_board, index, new_index, (empty_lin, empty_col+1), 
+                                    parent_level+1, heuristic_manhattan(parent_level+1, new_board))
+                _visited_list_.append(new_state)
+                insert_priority(priority_queue, new_state)
+                if(is_solution(new_board)):
+                    _solution_pos_ = new_index
+                    _solved_ = True
+
+        if(not _solved_ and empty_lin+1 < 3):
+            new_board = copy_board(board)
+            new_board[empty_lin][empty_col] = new_board[empty_lin+1][empty_col]
+            new_board[empty_lin+1][empty_col] = 9
+            if(not in_visited(new_board)):
+                new_index = len(_visited_list_)
+                new_state = _state_(new_board, index, new_index, (empty_lin+1, empty_col), 
+                                    parent_level+1, heuristic_manhattan(parent_level+1, new_board))
+                _visited_list_.append(new_state)
+                insert_priority(priority_queue, new_state)
+                if(is_solution(new_board)):
+                    _solution_pos_ = new_index
+                    _solved_ = True    
+
 
 
 def _breadth_search_():
-    global _visited_list_, _solution_pos_, _solved_
+    global _visited_list_, _solution_pos_, _solved_, _initial_state_
     
     queue = []
     queue.append(_initial_state_)
@@ -143,7 +243,7 @@ def _breadth_search_():
 
 
 def _deep_search_():
-    global _visited_list_, _solution_pos_, _solved_
+    global _visited_list_, _solution_pos_, _solved_, _initial_state_
     
     stack = []
     stack.append(_initial_state_)
