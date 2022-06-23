@@ -12,6 +12,18 @@ for lin in range(3):
     _SOLUTION_.append(line)
 
 
+# Check if is Solvable
+def _is_solvable_(board):
+    total = 0
+    for i in range(9):
+        number = board[i//3][i%3]
+        if(number != 9):
+            for j in range(i+1, 9):
+                if(number > board[j//3][j%3]):
+                    total += 1
+    return total%2 == 0
+
+
 
 # New Puzzle
 def _shuffle_():
@@ -111,8 +123,6 @@ def _a_star_():
     while(not _solved_ and len(priority_queue)>0):
         state = priority_queue.pop(0)
         board = state.board
-        print(len(_visited_list_))
-        print(board)
         index = state.index
         parent_level = state.tree_level
         empty_lin, empty_col = state.empty_pos
@@ -172,7 +182,8 @@ def _a_star_():
                 if(is_solution(new_board)):
                     _solution_pos_ = new_index
                     _solved_ = True    
-
+        print(len(_visited_list_))
+        print(_visited_list_[-1].board)
 
 
 def _breadth_search_():
@@ -184,8 +195,6 @@ def _breadth_search_():
     while(not _solved_ and len(queue)>0):
         state = queue.pop(0)
         board = state.board
-        print(len(_visited_list_))
-        print(board)
         index = state.index
         empty_lin, empty_col = state.empty_pos
 
@@ -240,7 +249,8 @@ def _breadth_search_():
                 if(is_solution(new_board)):
                     _solution_pos_ = new_index
                     _solved_ = True    
-
+        print(len(_visited_list_))
+        print(_visited_list_[-1].board)
 
 def _deep_search_():
     global _visited_list_, _solution_pos_, _solved_, _initial_state_
@@ -251,8 +261,6 @@ def _deep_search_():
     while(not _solved_ and len(stack)>0):
         state = stack.pop()
         board = state.board
-        print(len(_visited_list_))
-        print(board)
         index = state.index
         empty_lin, empty_col = state.empty_pos
 
@@ -307,7 +315,8 @@ def _deep_search_():
                 if(is_solution(new_board)):
                     _solution_pos_ = new_index
                     _solved_ = True    
-
+        print(len(_visited_list_))
+        print(_visited_list_[-1].board)
 
 
 # Interface Functions
@@ -320,7 +329,8 @@ def new_game():
     empty_pos, board = _shuffle_()
     _initial_state_ = _state_(board, 0, 0, empty_pos)
     _visited_list_.append(_initial_state_)
-    return _visited_list_[0].board  
+    solvable = _is_solvable_(board)
+    return (solvable, _visited_list_[0].board)
 
 
 def reset_game():
@@ -346,4 +356,4 @@ def solve(x):
         _path_list_.append(_visited_list_[_solution_pos_])
         _solution_pos_ = _visited_list_[_solution_pos_].parent
 
-    return _path_list_
+    return (_path_list_, len(_visited_list_))
