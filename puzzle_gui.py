@@ -40,6 +40,7 @@ main_frame.grid(row=1, column=0, padx=30)
 puzzle_frame = Frame(main_frame, bd=10, relief="ridge", pady=6, bg="Cadet Blue", width=500, height=450, )
 puzzle_frame.pack(side=LEFT)
 
+# Create Number Buttons 
 def show_numbers(numbers):
     for lin in range(len(numbers)):
         for col in range(len(numbers[0])):
@@ -76,17 +77,21 @@ algorithm_frame = Frame(buttons_frame, bg="Cadet Blue", bd=10, width=540, height
 algorithm_frame.grid(row=1, column=0)
 algorithm_control = IntVar()
 
+# Create Buttons
 Radiobutton(algorithm_frame, font=('arial', 30), text="      A *       ", indicatoron = 0, height=2,
                   variable=algorithm_control, value=0, pady=10).pack(side="left")
 Radiobutton(algorithm_frame, font=('arial', 30), text="   Largura    ", indicatoron = 0, height=2,
                   variable=algorithm_control, value=1, pady=10).pack(side="left")
-Radiobutton(algorithm_frame, font=('arial', 30), text="Profundidade ", indicatoron = 0, height=2,
+Radiobutton(algorithm_frame, font=('arial', 30), text="     Gulosa     ", indicatoron = 0, height=2,
                   variable=algorithm_control, value=2, pady=10).pack(side="left")
 
 
-# New Game - Reset Frame
-reset_new_frame = Frame(buttons_frame, bg="Cadet Blue", bd=10, width=540, height=200, padx=10, pady=2, relief='ridge')
-reset_new_frame.grid(row=2, column=0)
+# New Game - Reset - Solve Frame
+reset_new_solve_frame = Frame(buttons_frame, bg="Cadet Blue", bd=10, width=540, height=200, padx=10, pady=2, relief='ridge')
+reset_new_solve_frame.grid(row=2, column=0)
+
+
+# Button Activation Functions
 def reset_game():
     update_moves_time()
     show_numbers(ai.reset_game())
@@ -98,10 +103,9 @@ def new_game():
 
 def solve():
     states_list, visited = ai.solve(algorithm_control.get())
-    moves = 0
+    moves = 1
     last = len(states_list)-1
-    last = 0 if algorithm_control.get() == 2 else last
-    print(last)
+    print(last+1)
     while(last>=0):
         root.update()
         time.sleep(0.3)
@@ -110,9 +114,10 @@ def solve():
         moves += 1
         last -= 1
 
-Button(reset_new_frame, text = "   Reset   \nGame", font=('arial', 30),pady=10, height=2, command=reset_game).pack(side="left")
-Button(reset_new_frame, text = "New Game", font=('arial', 30),pady=10, height=2, command=new_game).pack(side="left")
-Button(reset_new_frame, text = "   Solve   ", font=('arial', 30),pady=10, height=2, command=solve).pack(side="left")
+# Create Buttons
+Button(reset_new_solve_frame, text = "   Reset   \nGame", font=('arial', 30),pady=10, height=2, command=reset_game).pack(side="left")
+Button(reset_new_solve_frame, text = "New Game", font=('arial', 30),pady=10, height=2, command=new_game).pack(side="left")
+Button(reset_new_solve_frame, text = "   Solve   ", font=('arial', 30),pady=10, height=2, command=solve).pack(side="left")
 
 
 
