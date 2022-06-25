@@ -80,9 +80,9 @@ algorithm_control = IntVar()
 # Create Buttons
 Radiobutton(algorithm_frame, font=('arial', 30), text="      A *       ", indicatoron = 0, height=2,
                   variable=algorithm_control, value=0, pady=10).pack(side="left")
-Radiobutton(algorithm_frame, font=('arial', 30), text="   Largura    ", indicatoron = 0, height=2,
+Radiobutton(algorithm_frame, font=('arial', 30), text="  Breadth S.  ", indicatoron = 0, height=2,
                   variable=algorithm_control, value=1, pady=10).pack(side="left")
-Radiobutton(algorithm_frame, font=('arial', 30), text="     Gulosa     ", indicatoron = 0, height=2,
+Radiobutton(algorithm_frame, font=('arial', 30), text="  Greedy S.  ", indicatoron = 0, height=2,
                   variable=algorithm_control, value=2, pady=10).pack(side="left")
 
 
